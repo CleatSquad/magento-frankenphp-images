@@ -15,6 +15,9 @@ env:
   IMAGE_NAME: mohelmrabet/magento-frankenphp
   FRANKENPHP_VERSION: '1.10.1'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
