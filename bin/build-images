@@ -1,0 +1,134 @@
+#!/bin/bash
+
+IMAGE="mohelmrabet/magento-frankenphp"
+VERSIONS="8.2 8.3 8.4"
+DOCKERHUB_TOKEN=''
+FP="1.10.1"
+
+build_all() {
+    echo "🔨 Building all PHP versions..."
+    for v in $VERSIONS; do
+        echo "🔨 Building PHP ${v} BASE..."
+        docker build \
+            -f Dockerfile \
+            --target base \
+            --build-arg PHP_VERSION="${v}" \
+            --build-arg FRANKENPHP_VERSION="${FP}" \
+            -t "${IMAGE}:php${v}-fp${FP}-base" .
+
+        echo "🔨 Building PHP ${v} DEV..."
+        docker build \
+            -f Dockerfile \
+            --target dev \
+            --build-arg PHP_VERSION="${v}" \
+            --build-arg FRANKENPHP_VERSION="${FP}" \
+            -t "${IMAGE}:php${v}-fp${FP}-dev" .
+    done
+    echo "✅ All PHP versions built!"
+}
+
+push_all() {
+    echo "📤 Pushing all PHP versions..."
+    for v in $VERSIONS; do
+        echo "📤 Pushing PHP ${v}..."
+        docker push "${IMAGE}:php${v}-fp${FP}-base"
+        docker push "${IMAGE}:php${v}-fp${FP}-dev"
+    done
+    echo "✅ All PHP versions pushed!"
+}
+
+push_latest() {
+    echo "📤 Pushing latest tags..."
+    docker tag ${IMAGE}:php8.4-fp${FP}-base ${IMAGE}:latest
+    docker tag ${IMAGE}:php8.4-fp${FP}-base ${IMAGE}:base
+    docker tag ${IMAGE}:php8.4-fp${FP}-dev ${IMAGE}:dev
+    docker push ${IMAGE}:latest
+    docker push ${IMAGE}:base
+    docker push ${IMAGE}:dev
+    echo "✅ Latest tags pushed!"
+}
+
+list_images() {
+    echo "📦 Local images:"
+    docker images | grep ${IMAGE}
+}
+
+push_readme() {
+    if [ ! -f "README.md" ]; then
+        echo "❌ README.md not found!"
+        exit 1
+    fi
+
+    if [ -z "$DOCKERHUB_TOKEN" ]; then
+        echo "❌ DOCKERHUB_TOKEN not set!"
+        echo ""
+        echo "1. Go to https://hub.docker.com/settings/security"
+        echo "2. Create a new Access Token"
+        echo "3. Run: DOCKERHUB_TOKEN=your_token ./bin/build-images push-readme"
+        exit 1
+    fi
+
+    DOCKER_USER="mohelmrabet"
+    REPO="magento-frankenphp"
+
+    echo "🔐 Getting Docker Hub JWT..."
+    JWT=$(curl -s -X POST \
+        -H "Content-Type: application/json" \
+        -d "{\"username\": \"${DOCKER_USER}\", \"password\": \"${DOCKERHUB_TOKEN}\"}" \
+        https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+    if [ "$JWT" == "null" ] || [ -z "$JWT" ]; then
+        echo "❌ Failed to authenticate!"
+        exit 1
+    fi
+
+    echo "📤 Pushing README to Docker Hub..."
+
+    RESPONSE=$(curl -s -X PATCH \
+        -H "Authorization: JWT ${JWT}" \
+        -H "Content-Type: application/json" \
+        -d "{\"full_description\": $(jq -Rs . < README.md), \"description\": \"Magento 2 + FrankenPHP Docker Images\"}" \
+        "https://hub.docker.com/v2/repositories/${DOCKER_USER}/${REPO}/")
+
+    if echo "$RESPONSE" | jq -e .full_description > /dev/null 2>&1; then
+        echo "✅ README pushed to Docker Hub!"
+    else
+        echo "❌ Failed to push README!"
+        echo "$RESPONSE"
+        exit 1
+    fi
+}
+
+case "$1" in
+    build)
+        build_all
+        ;;
+    push)
+        push_all
+        ;;
+    latest)
+        push_latest
+        ;;
+    push-readme)
+        push_readme
+        ;;
+    release)
+        build_all
+        push_all
+        push_latest
+        ;;
+    list)
+        list_images
+        ;;
+    *)
+        echo "Usage: $0 {build|push|latest|push-readme|release|list}"
+        echo ""
+        echo "  build       - Build all PHP versions (8.2, 8.3, 8.4)"
+        echo "  push        - Push all PHP versions to Docker Hub"
+        echo "  latest      - Tag and push latest tags"
+        echo "  push-readme - Push README.md to Docker Hub"
+        echo "  release     - Build + Push + Latest"
+        echo "  list        - List local images"
+        exit 1
+        ;;
+esac
