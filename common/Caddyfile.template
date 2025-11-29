@@ -1,0 +1,139 @@
+# Magento 2 FrankenPHP Caddyfile Template
+# ========================================
+#
+# This is a template file that gets processed at container startup.
+# You can customize this file and mount your own version at:
+#   /etc/caddy/Caddyfile.template
+#
+# Environment variables (with defaults):
+#   - SERVER_NAME: Server hostname (default: localhost)
+#   - CADDY_GLOBAL_OPTIONS: Global Caddy options
+#   - FRANKENPHP_CONFIG: FrankenPHP specific configuration
+#   - CADDY_EXTRA_CONFIG: Additional Caddy configuration blocks
+#   - CADDY_SERVER_EXTRA_DIRECTIVES: Extra directives for the server block
+#   - CADDY_TLS_CONFIG: TLS configuration (e.g., "internal" for self-signed or path to cert/key)
+#
+# Documentation:
+#   - Caddy: https://caddyserver.com/docs/
+#   - FrankenPHP: https://frankenphp.dev/docs/
+#   - Caddyfile: https://caddyserver.com/docs/caddyfile
+
+{
+    {$CADDY_GLOBAL_OPTIONS}
+
+    frankenphp {
+        {$FRANKENPHP_CONFIG}
+    }
+
+    order php_server before file_server
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+(503) {
+    rewrite * /errors/503.php
+}
+
+{$SERVER_NAME:localhost} {
+    tls {$CADDY_TLS_CONFIG:internal}
+    
+    log {
+        format filter {
+            wrap console
+            fields {
+                uri query {
+                    replace authorization REDACTED
+                }
+            }
+        }
+    }
+    log {
+        output stdout
+    }
+    root * /var/www/html/pub
+    encode zstd br gzip
+
+    {$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+    handle_errors {
+        @404 {
+            expression {http.error.status_code} == 404
+        }
+        rewrite @404 /errors/404.php
+    }
+
+    @sensitiveFiles {
+        path_regexp sensitive /(\.user.ini|\.php$|\.phtml$|\.htaccess$|\.htpasswd$|\.git)
+    }
+    respond @sensitiveFiles 403
+
+    header ?Permissions-Policy "browsing-topics=()"
+    php_server
+
+    handle /setup/* {
+        root * /var/www/html
+
+        @otherFiles not path /setup/pub/* /setup/index.php /setup /setup/
+        handle @otherFiles {
+            respond "Access Denied" 403
+        }
+        header /setup/pub/ {
+            X-Frame-Options "SAMEORIGIN"
+        }
+    }
+
+    @staticPath path_regexp reg_static ^/static/(version\d*/)?(.*)$
+    handle @staticPath {
+        @static file /static/{re.reg_static.2}
+        rewrite @static /static/{re.reg_static.2}
+
+        @staticFiles {
+            path *.ico *.jpg *.jpeg *.png *.gif *.svg *.svgz *.webp *.avif *.avifs *.js *.css *.eot *.ttf *.otf *.woff *.woff2 *.html *.json *.webmanifest
+        }
+        handle @staticFiles {
+            header Cache-Control "public, max-age=31536000"
+        }
+        @noCacheFiles {
+            path *.zip *.gz *.gzip *.bz2 *.csv *.xml
+        }
+        handle @noCacheFiles {
+            header Cache-Control "no-store, no-cache, must-revalidate"
+        }
+
+        @dynamic not file /static/{re.reg_static.2}
+        rewrite @dynamic /static.php?resource={re.reg_static.2}
+        header X-Frame-Options "SAMEORIGIN"
+    }
+
+    handle /media/* {
+        @denyXMLFiles path_regexp denyxml ^/media/theme_customization/.*\.xml
+        respond @denyXMLFiles 403
+
+        @staticFiles {
+            path *.ico *.jpg *.jpeg *.png *.gif *.svg *.svgz *.webp *.avif *.avifs *.js *.css *.eot *.ttf *.otf *.woff *.woff2
+        }
+        handle @staticFiles {
+            header Cache-Control "public, max-age=31536000"
+        }
+        @noCacheFiles {
+            path *.zip *.gz *.gzip *.bz2 *.csv *.xml
+        }
+        handle @noCacheFiles {
+            header Cache-Control "no-store, no-cache, must-revalidate"
+        }
+
+        try_files {path} {path}/ /get.php{query}
+        header X-Frame-Options "SAMEORIGIN"
+    }
+
+    @blockedDirectories path /media/customer/* /media/downloadable/* /media/import/* /media/custom_options/*
+    respond @blockedDirectories 403
+
+    @blockedXMLFiles path /errors/*.xml
+    respond @blockedXMLFiles 403
+
+    @phpFiles path /index.php /get.php /static.php /errors/report.php /errors/404.php /errors/503.php /health_check.php
+    handle @phpFiles {
+        try_files {path} {path}/ =404
+    }
+}
