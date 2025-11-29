@@ -13,6 +13,7 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: mohelmrabet/magento-frankenphp
+  FRANKENPHP_VERSION: '1.10.1'
 
 jobs:
   build:
@@ -41,7 +42,7 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=php${{ matrix.php_version }}-fp1.10.1-${{ matrix.target }}
+            type=raw,value=php${{ matrix.php_version }}-fp${{ env.FRANKENPHP_VERSION }}-${{ matrix.target }}
             type=raw,value=${{ matrix.target }},enable=${{ matrix.php_version == '8.4' }}
             type=raw,value=latest,enable=${{ matrix.php_version == '8.4' && matrix.target == 'base' }}
 
@@ -53,7 +54,7 @@ jobs:
           target: ${{ matrix.target }}
           build-args: |
             PHP_VERSION=${{ matrix.php_version }}
-            FRANKENPHP_VERSION=1.10.1
+            FRANKENPHP_VERSION=${{ env.FRANKENPHP_VERSION }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -65,7 +66,7 @@ jobs:
           docker build \
             --target ${{ matrix.target }} \
             --build-arg PHP_VERSION=${{ matrix.php_version }} \
-            --build-arg FRANKENPHP_VERSION=1.10.1 \
+            --build-arg FRANKENPHP_VERSION=${{ env.FRANKENPHP_VERSION }} \
             -t test-image .
           
           echo "🔍 Testing PHP version..."

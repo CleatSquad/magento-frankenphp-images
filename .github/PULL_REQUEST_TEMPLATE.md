@@ -49,7 +49,7 @@ docker run --rm test:base php -v
 
 <!-- Mark completed items with an 'x' -->
 
-- [ ] I have read the [CONTRIBUTING.md](../CONTRIBUTING.md) guide
+- [ ] I have read the [CONTRIBUTING.md](CONTRIBUTING.md) guide
 - [ ] My code follows the project's coding standards
 - [ ] I have run `hadolint Dockerfile` and fixed any issues
 - [ ] I have run `shellcheck` on any shell scripts I modified
