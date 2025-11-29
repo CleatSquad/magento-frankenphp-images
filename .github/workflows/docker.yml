@@ -7,9 +7,6 @@ on:
       - main
     tags:
       - 'v*'
-  pull_request:
-    branches:
-      - main
 
 env:
   REGISTRY: docker.io
@@ -20,60 +17,9 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: Test Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php_version: ['8.2', '8.3', '8.4']
-        target: ['base', 'dev']
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          target: ${{ matrix.target }}
-          build-args: |
-            PHP_VERSION=${{ matrix.php_version }}
-            FRANKENPHP_VERSION=${{ env.FRANKENPHP_VERSION }}
-          push: false
-          load: true
-          tags: test-image:${{ matrix.php_version }}-${{ matrix.target }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Test image
-        run: |
-          echo "🔍 Testing PHP version..."
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} php -v | grep -q "PHP ${{ matrix.php_version }}"
-
-          echo "🔍 Testing PHP extensions..."
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} php -m | grep -q "bcmath"
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} php -m | grep -q "gd"
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} php -m | grep -q "intl"
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} php -m | grep -q "pdo_mysql"
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} php -m | grep -q "redis"
-
-          echo "🔍 Testing Composer..."
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} composer --version
-
-          echo "🔍 Testing FrankenPHP..."
-          docker run --rm test-image:${{ matrix.php_version }}-${{ matrix.target }} frankenphp version
-
-          echo "✅ All tests passed!"
-
-  push:
+  build-and-push:
     name: Build and Push
     runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     strategy:
       matrix:
         php_version: ['8.2', '8.3', '8.4']
@@ -115,3 +61,26 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Test image
+        run: |
+          IMAGE_TAG="${{ env.IMAGE_NAME }}:php${{ matrix.php_version }}"
+          IMAGE_TAG="${IMAGE_TAG}-fp${{ env.FRANKENPHP_VERSION }}-${{ matrix.target }}"
+
+          echo "🔍 Testing PHP version..."
+          docker run --rm ${IMAGE_TAG} php -v | grep -q "PHP ${{ matrix.php_version }}"
+
+          echo "🔍 Testing PHP extensions..."
+          docker run --rm ${IMAGE_TAG} php -m | grep -q "bcmath"
+          docker run --rm ${IMAGE_TAG} php -m | grep -q "gd"
+          docker run --rm ${IMAGE_TAG} php -m | grep -q "intl"
+          docker run --rm ${IMAGE_TAG} php -m | grep -q "pdo_mysql"
+          docker run --rm ${IMAGE_TAG} php -m | grep -q "redis"
+
+          echo "🔍 Testing Composer..."
+          docker run --rm ${IMAGE_TAG} composer --version
+
+          echo "🔍 Testing FrankenPHP..."
+          docker run --rm ${IMAGE_TAG} frankenphp version
+
+          echo "✅ All tests passed!"
