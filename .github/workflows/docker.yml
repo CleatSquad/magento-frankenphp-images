@@ -1,3 +1,4 @@
+---
 name: Docker Build
 
 on:
@@ -71,21 +72,21 @@ jobs:
             --build-arg PHP_VERSION=${{ matrix.php_version }} \
             --build-arg FRANKENPHP_VERSION=${{ env.FRANKENPHP_VERSION }} \
             -t test-image .
-          
+
           echo "🔍 Testing PHP version..."
           docker run --rm test-image php -v | grep -q "PHP ${{ matrix.php_version }}"
-          
+
           echo "🔍 Testing PHP extensions..."
           docker run --rm test-image php -m | grep -q "bcmath"
           docker run --rm test-image php -m | grep -q "gd"
           docker run --rm test-image php -m | grep -q "intl"
           docker run --rm test-image php -m | grep -q "pdo_mysql"
           docker run --rm test-image php -m | grep -q "redis"
-          
+
           echo "🔍 Testing Composer..."
           docker run --rm test-image composer --version
-          
+
           echo "🔍 Testing FrankenPHP..."
           docker run --rm test-image frankenphp version
-          
+
           echo "✅ All tests passed!"

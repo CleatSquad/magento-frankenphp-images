@@ -1,3 +1,4 @@
+---
 name: Tests
 
 on:
@@ -23,7 +24,7 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
-          failure-threshold: warning
+          failure-threshold: error
 
   lint-shellscripts:
     name: Lint Shell Scripts
