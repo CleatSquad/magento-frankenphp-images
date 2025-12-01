@@ -1,5 +1,16 @@
 # Magento FrankenPHP Docker Images
-# <img src="https://frankenphp.dev/img/logo_darkbg.svg" width="180" />
+
+<p align="center">
+  <img src="https://frankenphp.dev/img/logo_darkbg.svg" width="150" alt="FrankenPHP Logo" />
+</p>
+
+<p align="center">
+  <a href="https://hub.docker.com/r/mohelmrabet/magento-frankenphp"><img src="https://img.shields.io/docker/pulls/mohelmrabet/magento-frankenphp.svg?logo=docker" alt="Docker Pulls" /></a>
+  <img src="https://img.shields.io/badge/magento-2.4.x-orange.svg?logo=magento" alt="Magento 2.4.x" />
+  <img src="https://img.shields.io/badge/php-8.2%20|%208.3%20|%208.4-blue.svg?logo=php" alt="PHP Versions" />
+  <img src="https://img.shields.io/badge/frankenphp-1.10-purple.svg" alt="FrankenPHP 1.10" />
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License MIT" /></a>
+</p>
 
 🚀 High-performance Docker images for Magento 2 with [FrankenPHP](https://frankenphp.dev/).
 
@@ -122,3 +133,19 @@ See the [Caddyfile Configuration Guide](docs/Caddyfile.md) for detailed document
 - 🐳 [Docker Hub](https://hub.docker.com/r/mohelmrabet/magento-frankenphp)
 - 📦 [GitHub](https://github.com/mohaelmrabet/magento-frankenphp-images)
 - 🚀 [FrankenPHP](https://frankenphp.dev/)
+- 🔐 [Security Policy](SECURITY.md)
+- 📖 [Contributing](CONTRIBUTING.md)
+- 📜 [Code of Conduct](CODE_OF_CONDUCT.md)
+
+## Documentation
+
+| Guide | Description |
+|-------|-------------|
+| [Getting Started](docs/getting-started.md) | Installation and initial setup |
+| [Configuration](docs/configuration.md) | Environment variables and settings |
+| [Caddyfile](docs/Caddyfile.md) | Web server configuration |
+| [Xdebug](docs/xdebug.md) | Debugging with Xdebug |
+
+## License
+
+MIT — see [LICENSE](LICENSE.txt)

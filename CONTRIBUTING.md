@@ -15,7 +15,7 @@ Thank you for your interest in contributing to this project! This document provi
 
 ## Code of Conduct
 
-By participating in this project, you agree to maintain a respectful and inclusive environment for everyone. Please be considerate of others and avoid any form of harassment or discrimination.
+By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). Please be considerate of others and avoid any form of harassment or discrimination.
 
 ## Getting Started
 

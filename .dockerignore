@@ -1,0 +1,32 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# IDE & Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# GitHub
+.github/
+
+# Configuration files not needed in image
+.editorconfig
+.yamllint.yml
+renovate.json
+
+# Development files
+docker-compose*.yml
+Makefile
+.env
+.env.*
+*.log
+
+# Build artifacts
+bin/build-images
