@@ -43,7 +43,7 @@ Before contributing, ensure you have the following installed:
 3. Add the upstream remote:
 
    ```bash
-   git remote add upstream https://github.com/mohaelmrabet/magento-frankenphp-images.git
+   git remote add upstream https://github.com/CleatSquad/magento-frankenphp-images.git
    ```
 
 ## How to Contribute
@@ -60,7 +60,7 @@ We welcome various types of contributions:
 
 ### Contribution Process
 
-1. Check the [issue tracker](https://github.com/mohaelmrabet/magento-frankenphp-images/issues) for existing issues
+1. Check the [issue tracker](https://github.com/CleatSquad/magento-frankenphp-images/issues) for existing issues
 2. If you want to work on something new, create an issue first to discuss it
 3. Assign yourself to the issue you want to work on
 4. Create a feature branch from `main`
