@@ -131,7 +131,7 @@ See the [Caddyfile Configuration Guide](docs/Caddyfile.md) for detailed document
 ## Links
 
 - 🐳 [Docker Hub](https://hub.docker.com/r/mohelmrabet/magento-frankenphp)
-- 📦 [GitHub](https://github.com/mohaelmrabet/magento-frankenphp-images)
+- 📦 [GitHub](https://github.com/CleatSquad/magento-frankenphp-images)
 - 🚀 [FrankenPHP](https://frankenphp.dev/)
 - 🔐 [Security Policy](SECURITY.md)
 - 📖 [Contributing](CONTRIBUTING.md)
