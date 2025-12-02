@@ -8,7 +8,7 @@
 
 ## Source Project
 
-This repository contains Docker image definitions extracted from [magento-docker-frankenphp](https://github.com/mohaelmrabet/magento-docker-frankenphp), a complete Magento 2 development environment using FrankenPHP.
+This repository contains Docker image definitions extracted from [magento-docker-frankenphp](https://github.com/CleatSquad/magento-docker-frankenphp), a complete Magento 2 development environment using FrankenPHP.
 
 ## Technologies
 
@@ -31,7 +31,7 @@ This project is built with and depends on these amazing technologies:
 
 ## Contributors
 
-We appreciate all contributions to this project! See the [contributors page](https://github.com/mohaelmrabet/magento-frankenphp-images/graphs/contributors) for a full list.
+We appreciate all contributions to this project! See the [contributors page](https://github.com/CleatSquad/magento-frankenphp-images/graphs/contributors) for a full list.
 
 ## Acknowledgments
 
