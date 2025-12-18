@@ -1,14 +1,13 @@
-#syntax=docker/dockerfile:1.20
+#syntax=docker/dockerfile:1.4
 # Dockerfile for Magento FrankenPHP
-# Supports base and dev build targets via BUILD_TYPE ARG
+# Supports base and dev build targets
 #
 # Build examples:
-#   docker build --build-arg BUILD_TYPE=base -t magento-frankenphp:base .
-#   docker build --build-arg BUILD_TYPE=dev -t magento-frankenphp:dev .
+#   docker build --target base -t magento-frankenphp:base .
+#   docker build --target dev -t magento-frankenphp:dev .
 
 ARG PHP_VERSION=8.4
 ARG FRANKENPHP_VERSION=1.10.1
-ARG BUILD_TYPE=base
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS base
 LABEL maintainer="Mohamed El Mrabet <contact@cleatsquad.dev>"
@@ -118,5 +117,3 @@ ENV SENDMAIL_PATH=/usr/local/bin/mhsendmail \
     XDEBUG_CLIENT_PORT=9003 \
     XDEBUG_START_WITH_REQUEST=trigger \
     XDEBUG_IDEKEY=PHPSTORM
-
-FROM ${BUILD_TYPE} AS final

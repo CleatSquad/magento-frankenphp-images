@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 IMAGE="mohelmrabet/magento-frankenphp"
 VERSIONS="8.2 8.3 8.4"
@@ -39,18 +40,18 @@ push_all() {
 
 push_latest() {
     echo "📤 Pushing latest tags..."
-    docker tag ${IMAGE}:php8.4-fp${FP}-base ${IMAGE}:latest
-    docker tag ${IMAGE}:php8.4-fp${FP}-base ${IMAGE}:base
-    docker tag ${IMAGE}:php8.4-fp${FP}-dev ${IMAGE}:dev
-    docker push ${IMAGE}:latest
-    docker push ${IMAGE}:base
-    docker push ${IMAGE}:dev
+    docker tag "${IMAGE}:php8.4-fp${FP}-base" "${IMAGE}:latest"
+    docker tag "${IMAGE}:php8.4-fp${FP}-base" "${IMAGE}:base"
+    docker tag "${IMAGE}:php8.4-fp${FP}-dev" "${IMAGE}:dev"
+    docker push "${IMAGE}:latest"
+    docker push "${IMAGE}:base"
+    docker push "${IMAGE}:dev"
     echo "✅ Latest tags pushed!"
 }
 
 list_images() {
     echo "📦 Local images:"
-    docker images | grep ${IMAGE}
+    docker images | grep "${IMAGE}"
 }
 
 push_readme() {
