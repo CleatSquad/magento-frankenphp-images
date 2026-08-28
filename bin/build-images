@@ -2,9 +2,9 @@
 set -e
 
 IMAGE="mohelmrabet/magento-frankenphp"
-VERSIONS="8.2 8.3 8.4"
+VERSIONS="8.2 8.3 8.4 8.5"
 DOCKERHUB_TOKEN=''
-FP="1.10.1"
+FP="1.12.7"
 
 build_all() {
     echo "🔨 Building all PHP versions..."
@@ -124,7 +124,7 @@ case "$1" in
     *)
         echo "Usage: $0 {build|push|latest|push-readme|release|list}"
         echo ""
-        echo "  build       - Build all PHP versions (8.2, 8.3, 8.4)"
+        echo "  build       - Build all PHP versions (${VERSIONS})"
         echo "  push        - Push all PHP versions to Docker Hub"
         echo "  latest      - Tag and push latest tags"
         echo "  push-readme - Push README.md to Docker Hub"

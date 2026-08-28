@@ -1,0 +1,42 @@
+#!/bin/bash
+# Trust mkcert-issued dev certificates in the host's browsers.
+#
+# The dev container generates its TLS certificate with mkcert at startup.
+# For that certificate to show up as "trusted" (no browser warning), the
+# same mkcert local CA must be trusted on the HOST, and the container must
+# sign with that same CA rather than generating its own throwaway one.
+#
+# This script:
+#   1. Installs mkcert's local CA in the host's trust stores (mkcert -install)
+#   2. Prints the docker-compose volume mapping needed to share that CA with
+#      the container, so certs generated inside are trusted outside.
+set -e
+
+if ! command -v mkcert >/dev/null 2>&1; then
+    echo "❌ mkcert is not installed on this host."
+    echo ""
+    echo "Install it first:"
+    echo "  macOS:   brew install mkcert"
+    echo "  Linux:   see https://github.com/FiloSottile/mkcert#linux"
+    echo "  Windows: choco install mkcert"
+    exit 1
+fi
+
+echo "🔏 Installing mkcert local CA in host trust stores..."
+mkcert -install
+
+CAROOT="$(mkcert -CAROOT)"
+echo "✅ Local CA trusted. CAROOT: ${CAROOT}"
+echo ""
+echo "Share this CA with the dev container by mounting it and setting CAROOT"
+echo "so certificates generated inside the container are signed by the same"
+echo "CA your host already trusts:"
+echo ""
+echo "services:"
+echo "  app:"
+echo "    environment:"
+echo "      - CAROOT=/tmp/mkcert-caroot"
+echo "    volumes:"
+echo "      - ${CAROOT}:/tmp/mkcert-caroot:ro"
+echo ""
+echo "Then restart the container: docker compose up -d --force-recreate app"

@@ -7,7 +7,7 @@
 #   docker build --target dev -t magento-frankenphp:dev .
 
 ARG PHP_VERSION=8.4
-ARG FRANKENPHP_VERSION=1.10.1
+ARG FRANKENPHP_VERSION=1.12.7
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS base
 LABEL maintainer="Mohamed El Mrabet <contact@cleatsquad.dev>"
@@ -59,7 +59,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set up app dir and ownership
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN mkdir -p /etc/caddy /data/caddy /var/www/html /var/www/.composer /etc/php \
-    && chown -R www-data:www-data /var/www /data /etc/caddy \
+    && chown -R www-data:www-data /var/www /data /etc/caddy /config/caddy \
     && chown root:root /etc/php
 
 COPY --chown=www-data:www-data common/Caddyfile.template /etc/caddy/Caddyfile.template
@@ -77,6 +77,8 @@ ENV CADDY_LOG_OUTPUT=stdout \
 
 WORKDIR /var/www/html
 
+USER www-data
+
 EXPOSE 80
 EXPOSE 443
 EXPOSE 443/udp
@@ -89,6 +91,14 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost/health.php || exit 1
 
 FROM base AS dev
+
+# The dev entrypoint needs root at startup to remap www-data to the host's
+# UID/GID and install mkcert's CA, then drops to www-data via gosu before
+# starting FrankenPHP (see common/entrypoint-dev.sh) -- the same pattern used
+# by official images like postgres/mysql. The dev image is never used as a
+# production runtime target, only the base target is.
+# trivy:ignore:AVD-DS-0002
+USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
