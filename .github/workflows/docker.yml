@@ -11,7 +11,7 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: mohelmrabet/magento-frankenphp
-  FRANKENPHP_VERSION: '1.10.1'
+  FRANKENPHP_VERSION: '1.11.3'
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php_version: ['8.2', '8.3', '8.4']
+        php_version: ['8.2', '8.3', '8.4', '8.5']
         target: ['base', 'dev']
     steps:
       - name: Checkout
