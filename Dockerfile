@@ -12,8 +12,11 @@ ARG FRANKENPHP_VERSION=1.12.7
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS base
 LABEL maintainer="Mohamed El Mrabet <contact@cleatsquad.dev>"
 
-# Combine package installation and cleanup in a single layer
+# Combine package installation and cleanup in a single layer.
+# apt-get upgrade pulls in Debian security patches for packages already in
+# the base frankenphp image (e.g. perl) that a plain install wouldn't touch.
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
       cron \
       libfreetype6-dev \
@@ -100,7 +103,7 @@ FROM base AS dev
 # trivy:ignore:AVD-DS-0002
 USER root
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     git \
     mkcert \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
