@@ -8,7 +8,7 @@
   <a href="https://hub.docker.com/r/mohelmrabet/magento-frankenphp"><img src="https://img.shields.io/docker/pulls/mohelmrabet/magento-frankenphp.svg?logo=docker" alt="Docker Pulls" /></a>
   <img src="https://img.shields.io/badge/magento-2.4.x-orange.svg?logo=magento" alt="Magento 2.4.x" />
   <img src="https://img.shields.io/badge/php-8.2%20|%208.3%20|%208.4%20|%208.5-blue.svg?logo=php" alt="PHP Versions" />
-  <img src="https://img.shields.io/badge/frankenphp-1.11-purple.svg" alt="FrankenPHP 1.11" />
+  <img src="https://img.shields.io/badge/frankenphp-1.12-purple.svg" alt="FrankenPHP 1.12" />
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License MIT" /></a>
 </p>
 
@@ -26,14 +26,14 @@
 
 | Tag | PHP | Type | Description |
 |-----|-----|------|-------------|
-| `php8.5-fp1.11.3-base` | 8.5 | Base | Production ready |
-| `php8.5-fp1.11.3-dev` | 8.5 | Dev | With Xdebug |
-| `php8.4-fp1.11.3-base` | 8.4 | Base | Production ready |
-| `php8.4-fp1.11.3-dev` | 8.4 | Dev | With Xdebug |
-| `php8.3-fp1.11.3-base` | 8.3 | Base | Production ready |
-| `php8.3-fp1.11.3-dev` | 8.3 | Dev | With Xdebug |
-| `php8.2-fp1.11.3-base` | 8.2 | Base | Production ready (EOL 2026-12-31, upgrade recommended) |
-| `php8.2-fp1.11.3-dev` | 8.2 | Dev | With Xdebug (EOL 2026-12-31, upgrade recommended) |
+| `php8.5-fp1.12.7-base` | 8.5 | Base | Production ready |
+| `php8.5-fp1.12.7-dev` | 8.5 | Dev | With Xdebug |
+| `php8.4-fp1.12.7-base` | 8.4 | Base | Production ready |
+| `php8.4-fp1.12.7-dev` | 8.4 | Dev | With Xdebug |
+| `php8.3-fp1.12.7-base` | 8.3 | Base | Production ready |
+| `php8.3-fp1.12.7-dev` | 8.3 | Dev | With Xdebug |
+| `php8.2-fp1.12.7-base` | 8.2 | Base | Production ready (EOL 2026-12-31, upgrade recommended) |
+| `php8.2-fp1.12.7-dev` | 8.2 | Dev | With Xdebug (EOL 2026-12-31, upgrade recommended) |
 | `latest` | 8.4 | Base | Default |
 | `base` | 8.4 | Base | Alias |
 | `dev` | 8.4 | Dev | Alias |
@@ -45,7 +45,7 @@
 ```yaml
 services:
   app:
-    image: mohelmrabet/magento-frankenphp:php8.4-fp1.11.3-dev
+    image: mohelmrabet/magento-frankenphp:php8.4-fp1.12.7-dev
     environment:
       - USER_ID=1000
       - GROUP_ID=1000
@@ -59,7 +59,7 @@ services:
 ### Production
 
 ```dockerfile
-FROM mohelmrabet/magento-frankenphp:php8.4-fp1.11.3-base
+FROM mohelmrabet/magento-frankenphp:php8.4-fp1.12.7-base
 
 COPY --chown=www-data:www-data . /var/www/html/
 
@@ -73,7 +73,7 @@ RUN bin/magento setup:static-content:deploy -f
 
 ### Base Image
 - ✅ PHP 8.2, 8.3, 8.4, 8.5
-- ✅ FrankenPHP 1.11.3
+- ✅ FrankenPHP 1.12.7
 - ✅ All Magento PHP extensions
 - ✅ Composer 2
 - ✅ OPcache optimized

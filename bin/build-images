@@ -4,7 +4,7 @@ set -e
 IMAGE="mohelmrabet/magento-frankenphp"
 VERSIONS="8.2 8.3 8.4 8.5"
 DOCKERHUB_TOKEN=''
-FP="1.11.3"
+FP="1.12.7"
 
 build_all() {
     echo "🔨 Building all PHP versions..."
