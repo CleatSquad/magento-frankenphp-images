@@ -58,7 +58,7 @@ The Caddyfile template supports the following environment variables:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ENABLE_SSL_DEV` | `true` | Enable/disable self-signed SSL certificate generation |
+| `ENABLE_SSL_DEV` | `true` | Enable/disable mkcert TLS certificate generation at startup |
 
 ### Examples
 
@@ -82,11 +82,11 @@ environment:
 
 ### Development (dev image)
 
-The dev image uses Caddy's built-in `tls internal` directive by default, which automatically generates self-signed SSL certificates.
+The dev image generates a TLS certificate at startup using [mkcert](https://github.com/FiloSottile/mkcert), signed by a CA generated inside the container. Falls back to Caddy's built-in `tls internal` directive (self-signed) if mkcert is unavailable or fails.
 
 #### Fixing `net::ERR_CERT_AUTHORITY_INVALID` Error
 
-By default, browsers don't trust the self-signed certificates. You have two options to fix this:
+By default, browsers don't trust the container's mkcert CA. You have two options to fix this:
 
 **Option 1: Trust the certificate manually in your browser (Quick)**
 
@@ -94,9 +94,9 @@ By default, browsers don't trust the self-signed certificates. You have two opti
 2. Click "Advanced" or "Show Details"
 3. Click "Proceed to site" or "Accept the Risk and Continue"
 
-**Option 2: Keep using internal TLS (Default)**
+**Option 2: Trust it automatically with `bin/setup-ssl`**
 
-By default, the container uses `tls internal` which generates self-signed certificates automatically. The only downside is the browser warning.
+Run `./bin/setup-ssl` on the host to install mkcert's CA in your host trust stores and mount it into the container (via `CAROOT`), so the container signs its certificate with the same CA the host already trusts. See the [Configuration Guide](configuration.md#trusted-local-https-mkcert).
 
 ### Production (base image)
 

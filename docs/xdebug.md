@@ -4,7 +4,7 @@ This guide explains how to configure and use Xdebug for debugging your Magento 2
 
 ## Prerequisites
 
-- Use the **development image** (`mohelmrabet/magento-frankenphp:dev` or `php8.4-fp1.10.1-dev`)
+- Use the **development image** (`mohelmrabet/magento-frankenphp:dev` or `php8.4-fp1.11.3-dev`)
 - PHPStorm, VS Code, or another IDE with Xdebug support
 
 ## Default Configuration
@@ -36,7 +36,7 @@ You can customize Xdebug settings using environment variables. These are process
 ```yaml
 services:
   app:
-    image: mohelmrabet/magento-frankenphp:php8.4-fp1.10.1-dev
+    image: mohelmrabet/magento-frankenphp:php8.4-fp1.11.3-dev
     environment:
       XDEBUG_MODE: debug
       XDEBUG_CLIENT_HOST: host.docker.internal

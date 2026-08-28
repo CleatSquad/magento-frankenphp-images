@@ -17,8 +17,9 @@ This guide covers all configuration options for the Magento FrankenPHP Docker im
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ENABLE_SSL_DEV` | `true` | Enable self-signed SSL |
-| `CADDY_TLS_CONFIG` | (empty) | Custom TLS certificate paths |
+| `ENABLE_SSL_DEV` | `true` | Generate a locally-trusted certificate with mkcert at startup |
+| `CADDY_TLS_CONFIG` | (empty, auto) | Set explicitly to skip mkcert and use `internal` or your own `cert key` paths |
+| `CAROOT` | (mkcert default) | Path to a shared mkcert CA so generated certs are trusted by the host |
 
 ### Caddy Configuration
 
@@ -82,20 +83,39 @@ For detailed Xdebug configuration including IDE setup, CLI debugging, and troubl
 
 ## SSL Certificates
 
-### Development (Self-Signed)
+### Development (mkcert)
 
-The dev image uses Caddy's `tls internal` by default.
+On startup, the dev image generates a TLS certificate for `SERVER_NAME` using
+[mkcert](https://github.com/FiloSottile/mkcert), stored in the `/data/caddy/mkcert`
+volume. By default this uses a CA generated inside the container, which your
+host browser won't trust yet — you'll see a warning once, and can inspect/accept
+it manually.
 
 **Option 1: Accept browser warning**
 
 Click "Advanced" → "Proceed to site" in browser.
 
-**Option 2: Disable SSL**
+**Option 2: Trust the certificate automatically**
+
+Share your host's mkcert CA with the container:
+
+```bash
+./bin/setup-ssl
+```
+
+This installs mkcert's CA in your host trust stores and prints the
+`docker-compose.yml` volume/env snippet to mount that CA into the container
+(`CAROOT`), so the container signs its certificate with the same CA the host
+already trusts. Restart the container afterwards.
+
+**Option 3: Fall back to Caddy's internal self-signed TLS**
 
 ```yaml
 environment:
-  CADDY_TLS_CONFIG: ""
+  ENABLE_SSL_DEV: "false"
 ```
+
+or set `CADDY_TLS_CONFIG: internal` to skip mkcert explicitly.
 
 ### Production (Let's Encrypt)
 
