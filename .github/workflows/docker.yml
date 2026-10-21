@@ -9,7 +9,7 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: mohelmrabet/magento-frankenphp
-  FRANKENPHP_VERSION: '1.12.7'
+  FRANKENPHP_VERSION: '1.13.2'
 
 permissions:
   contents: read
