@@ -7,7 +7,7 @@
 #   docker build --target dev -t magento-frankenphp:dev .
 
 ARG PHP_VERSION=8.4
-ARG FRANKENPHP_VERSION=1.13.2
+ARG FRANKENPHP_VERSION=1.13.3
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS base
 LABEL maintainer="Mohamed El Mrabet <contact@cleatsquad.dev>"
