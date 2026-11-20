@@ -30,6 +30,22 @@
         "dependencies",
         "frankenphp"
       ]
+    },
+    {
+      "description": "Automerge FrankenPHP patch and minor updates once the image build and tests pass; docker.yml then publishes the new tags",
+      "matchPackageNames": [
+        "dunglas/frankenphp"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false
     }
   ],
   "customManagers": [
