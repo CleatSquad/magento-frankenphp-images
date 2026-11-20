@@ -26,14 +26,14 @@
 
 | Tag | PHP | Type | Description |
 |-----|-----|------|-------------|
-| `php8.5-fp1.13.2-base` | 8.5 | Base | Production ready |
-| `php8.5-fp1.13.2-dev` | 8.5 | Dev | With Xdebug |
-| `php8.4-fp1.13.2-base` | 8.4 | Base | Production ready |
-| `php8.4-fp1.13.2-dev` | 8.4 | Dev | With Xdebug |
-| `php8.3-fp1.13.2-base` | 8.3 | Base | Production ready |
-| `php8.3-fp1.13.2-dev` | 8.3 | Dev | With Xdebug |
-| `php8.2-fp1.13.2-base` | 8.2 | Base | Production ready (EOL 2026-12-31, upgrade recommended) |
-| `php8.2-fp1.13.2-dev` | 8.2 | Dev | With Xdebug (EOL 2026-12-31, upgrade recommended) |
+| `php8.5-fp1.13.6-base` | 8.5 | Base | Production ready |
+| `php8.5-fp1.13.6-dev` | 8.5 | Dev | With Xdebug |
+| `php8.4-fp1.13.6-base` | 8.4 | Base | Production ready |
+| `php8.4-fp1.13.6-dev` | 8.4 | Dev | With Xdebug |
+| `php8.3-fp1.13.6-base` | 8.3 | Base | Production ready |
+| `php8.3-fp1.13.6-dev` | 8.3 | Dev | With Xdebug |
+| `php8.2-fp1.13.6-base` | 8.2 | Base | Production ready (EOL 2026-12-31, upgrade recommended) |
+| `php8.2-fp1.13.6-dev` | 8.2 | Dev | With Xdebug (EOL 2026-12-31, upgrade recommended) |
 | `latest` | 8.4 | Base | Default |
 | `base` | 8.4 | Base | Alias |
 | `dev` | 8.4 | Dev | Alias |
@@ -45,7 +45,7 @@
 ```yaml
 services:
   app:
-    image: mohelmrabet/magento-frankenphp:php8.4-fp1.13.2-dev
+    image: mohelmrabet/magento-frankenphp:php8.4-fp1.13.6-dev
     environment:
       - USER_ID=1000
       - GROUP_ID=1000
@@ -59,7 +59,7 @@ services:
 ### Production
 
 ```dockerfile
-FROM mohelmrabet/magento-frankenphp:php8.4-fp1.13.2-base
+FROM mohelmrabet/magento-frankenphp:php8.4-fp1.13.6-base
 
 COPY --chown=www-data:www-data . /var/www/html/
 
@@ -73,7 +73,7 @@ RUN bin/magento setup:static-content:deploy -f
 
 ### Base Image
 - ✅ PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 (PHP2Shell CVE-2026-109618 / CVE-2026-109619 fixed)
-- ✅ FrankenPHP 1.13.2
+- ✅ FrankenPHP 1.13.6
 - ✅ All Magento PHP extensions
 - ✅ Composer 2
 - ✅ OPcache optimized
